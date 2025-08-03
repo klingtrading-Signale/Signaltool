@@ -74,5 +74,5 @@ document.getElementById("signalForm").addEventListener("submit", function(e) {
     `;
   }
 
-  document.getElementById("output").innerHTML = outputHTML;
+  document.getElementById("output").innerHTML = outputHTML + "<p style=\"margin-top:1rem;font-style:italic;font-size:0.9rem\">📎 Hinweis: Option Chain PDF wurde noch nicht ausgewertet – Funktion folgt in Modul 3.</p>";
 });
