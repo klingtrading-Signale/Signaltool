@@ -5,9 +5,50 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>A++ Signal Generator</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
-<body style="font-family: sans-serif; padding: 2rem;">
-  <h1>A++ Signal Generator</h1>
-  <p>Diese Datei ist bereit für den Upload auf Vercel oder lokale Tests.</p>
+<body>
+  <div class="container">
+    <h1>A++ Signal Generator</h1>
+    <form id="signalForm">
+      <label>Markt:
+        <select id="market">
+          <option>ES</option>
+          <option>MES</option>
+          <option>NQ</option>
+          <option>MNQ</option>
+        </select>
+      </label>
+      <label>Aktueller Preis: <input type="number" id="price" required /></label>
+      <label>Kontogröße ($): <input type="number" id="balance" required /></label>
+      <label>Risiko pro Trade ($): <input type="number" id="risk" required /></label>
+      <label>Eröffnung:
+        <select id="openType">
+          <option>innerhalb Range</option>
+          <option>Gap up</option>
+          <option>Gap down</option>
+        </select>
+      </label>
+      <label>VIX: <input type="number" step="0.01" id="vix" /></label>
+      <label>Max Pain: <input type="number" step="0.01" id="maxPain" /></label>
+      <label>GEX:
+        <select id="gex">
+          <option>positiv</option>
+          <option>neutral</option>
+          <option>negativ</option>
+        </select>
+      </label>
+      <label>CRV Wunsch:
+        <select id="crvSelect">
+          <option value="1">mind. 1:1</option>
+          <option value="2">mind. 2:1</option>
+          <option value="3">mind. 3:1</option>
+        </select>
+      </label>
+      <button type="submit">📊 Signal generieren</button>
+    </form>
+    <div id="output" class="signal-box"></div>
+  </div>
+  <script src="logic.js"></script>
 </body>
 </html>
