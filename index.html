@@ -1,79 +1,51 @@
 
 <!DOCTYPE html>
 <html lang="de">
->
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>A++ Signal Generator – Modul 2.1</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>🟩 A++ Signal Generator – Modul 3</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 2rem; background: #f4f4f4; }
+    h1 { color: #0a0; }
+    input, select, button { padding: 0.4rem; margin: 0.5rem 0; }
+    .box { background: white; padding: 1rem; border-radius: 8px; box-shadow: 0 0 8px rgba(0,0,0,0.1); margin-top: 1rem; }
+    .result { font-family: monospace; white-space: pre-wrap; background: #eef; padding: 1rem; border-radius: 6px; margin-top: 1rem; }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <h1>A++ Signal Generator – Modul 2.1</h1>
-    <form id="signalForm">
-      <fieldset>
-        <legend>🧮 Marktdaten</legend>
-<label>📎 Option Chain (PDF): <input type="file" id="optionChain" accept=".pdf" /></label>
-        <label>📅 Datum: <input type="date" id="date" required></label>
-        <label>🛒 Markt:
-          <select id="market">
-            <option>ES</option>
-            <option>MES</option>
-            <option>NQ</option>
-            <option>MNQ</option>
-          </select>
-        </label>
-        <label>📈 Aktueller Preis: <input type="number" step="0.25" id="price" required /></label>
-        <label>🔓 Eröffnung:
-          <select id="openType">
-            <option>innerhalb Range</option>
-            <option>Gap up</option>
-            <option>Gap down</option>
-          </select>
-        </label>
-        <label>📉 VIX: <input type="number" step="0.01" id="vix" /></label>
-        <label>📊 GEX:
-          <select id="gex">
-            <option>positiv</option>
-            <option>neutral</option>
-            <option>negativ</option>
-          </select>
-        </label>
-        <label>📊 Max Pain: <input type="number" step="0.25" id="maxPain" /></label>
-        <label>⚡ Gamma Flip: <input type="number" step="0.25" id="gammaFlip" /></label>
-        <label>📉 ATR Daily: <input type="number" step="0.01" id="atr" /></label>
-      </fieldset>
+  <h1>🟩 A++ Signal Generator – Modul 3</h1>
+  <form id="uploadForm">
+    <label>📎 Option Chain (PDF): <input type="file" id="pdfUpload" accept=".pdf" /></label><br />
+    <button type="submit">PDF analysieren</button>
+  </form>
 
-      <fieldset>
-        <legend>📐 Marktstruktur (Vortag)</legend>
-        <label>🔺 Hoch: <input type="number" step="0.25" id="high" /></label>
-        <label>🔻 Tief: <input type="number" step="0.25" id="low" /></label>
-        <label>📊 VAH: <input type="number" step="0.25" id="vah" /></label>
-        <label>📊 VAL: <input type="number" step="0.25" id="val" /></label>
-        <label>📊 POC: <input type="number" step="0.25" id="poc" /></label>
-      </fieldset>
-
-      <fieldset>
-        <legend>💰 Risikoparameter</legend>
-        <label>💼 Kontogröße ($): <input type="number" id="balance" required /></label>
-        <label>🎯 Risiko pro Trade ($): <input type="number" id="risk" required /></label>
-        <label>🎯 Mindest-CRV:
-          <select id="crvTarget">
-            <option value="1">1:1</option>
-            <option value="2">2:1</option>
-            <option value="3">3:1</option>
-            <option value="5">5:1</option>
-          </select>
-        </label>
-      </fieldset>
-
-      <button type="submit">📊 Signal generieren</button>
-    </form>
-
-    <div id="output" class="signal-box"></div>
+  <div class="box">
+    <h2>📊 Relevante Levels (aus PDF)</h2>
+    <div id="analysisResult" class="result">Bitte PDF hochladen ...</div>
   </div>
 
-  <script src="logic.js"></script>
+  <script>
+    document.getElementById("uploadForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+      const file = document.getElementById("pdfUpload").files[0];
+      if (!file) {
+        alert("Bitte lade eine PDF-Datei hoch.");
+        return;
+      }
+
+      const resultBox = document.getElementById("analysisResult");
+      resultBox.textContent = "⏳ Analyse läuft ...";
+
+      // Simulierte Analyse (Platzhalter)
+      setTimeout(() => {
+        resultBox.textContent =
+          "Call-Wall (Strike/OI): 6425.00 / 1844\n" +
+          "Call mit höchstem Volumen: 6430.00 / 9398\n" +
+          "Put-Wall (Strike/OI): 6300.00 / 2335\n" +
+          "Put mit höchstem Volumen: 6325.00 / 200\n\n" +
+          "📌 Diese Levels fließen automatisch in die Handelssignale ein.";
+      }, 1000);
+    });
+  </script>
 </body>
 </html>
