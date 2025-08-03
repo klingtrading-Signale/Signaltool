@@ -3,22 +3,24 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <title>A++ Signal Generator – Alle Module</title>
+  <title>A++ Signal Generator – Vollversion</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 2rem; background: #f2f2f2; }
-    label { display: block; margin-top: 0.6rem; }
-    input, select, button { padding: 0.4rem; margin-top: 0.2rem; width: 250px; }
-    .box { background: white; padding: 1rem; margin-top: 1rem; border-radius: 8px; box-shadow: 0 0 6px rgba(0,0,0,0.1); }
-    .result { font-family: monospace; background: #eef; padding: 1rem; white-space: pre-wrap; border-radius: 6px; margin-top: 1rem; }
+    body { font-family: Arial, sans-serif; padding: 2rem; background: #f8f9fa; }
+    h1 { color: #0a0; }
+    .box { background: #fff; padding: 1.2rem; margin-top: 1rem; border-radius: 8px; box-shadow: 0 0 5px rgba(0,0,0,0.1); }
+    label { display: block; margin-top: 0.6rem; font-weight: bold; }
+    input, select { padding: 0.4rem; margin-top: 0.2rem; width: 250px; }
+    .result { background: #eef; padding: 1rem; white-space: pre-wrap; border-radius: 6px; margin-top: 1rem; font-family: monospace; }
+    button { margin-top: 1rem; padding: 0.5rem 1rem; background: #0a0; color: white; border: none; border-radius: 4px; cursor: pointer; }
   </style>
 </head>
 <body>
-  <h1>🟩 A++ Signal Generator</h1>
+  <h1>🟩 A++ Signal Generator – Vollversion</h1>
 
   <div class="box">
     <form id="signalForm">
       <label>📅 Datum: <input type="text" id="datum" placeholder="01.08.2025" /></label>
-      <label>📈 Markt: 
+      <label>📈 Markt:
         <select id="markt">
           <option value="ES">ES</option>
           <option value="MES">MES</option>
@@ -26,9 +28,9 @@
           <option value="MNQ">MNQ</option>
         </select>
       </label>
-      <label>💰 Kontogröße ($): <input type="number" id="kontogroesse" value="2000" /></label>
+      <label>💰 Kontogröße ($): <input type="number" id="konto" value="2000" /></label>
       <label>🎯 Risiko pro Trade ($): <input type="number" id="risiko" value="100" /></label>
-      <label>⚖️ Mindest-CRV: 
+      <label>⚖️ Mindest-CRV:
         <select id="crv">
           <option value="1">1:1</option>
           <option value="2">2:1</option>
@@ -36,55 +38,51 @@
           <option value="5">5:1</option>
         </select>
       </label>
+      <label>📉 ATR Daily: <input type="number" id="atr" step="0.01" /></label>
+      <label>📊 VIX: <input type="number" id="vix" step="0.01" /></label>
+      <label>📍 Aktueller Preis: <input type="number" id="preis" step="0.01" /></label>
+      <label>🔻 Max Pain: <input type="number" id="maxpain" /></label>
+      <label>⚙️ GEX:
+        <select id="gex">
+          <option value="positiv">Positiv</option>
+          <option value="neutral">Neutral</option>
+          <option value="negativ">Negativ</option>
+        </select>
+      </label>
       <label>📎 Option Chain (PDF): <input type="file" id="pdfUpload" accept=".pdf" /></label>
-      <button type="submit">🔍 Signal generieren</button>
+      <button type="submit">📊 Signal generieren</button>
     </form>
   </div>
 
   <div class="box">
-    <h2>📊 Analyse & Signal</h2>
-    <div id="output" class="result">Bitte alle Daten eingeben und PDF hochladen.</div>
+    <h2>📈 Signal-Ausgabe</h2>
+    <div id="output" class="result">Bitte alle Werte eingeben & PDF hochladen.</div>
   </div>
 
   <script>
     document.getElementById("signalForm").addEventListener("submit", function(e) {
       e.preventDefault();
-      const datum = document.getElementById("datum").value;
       const markt = document.getElementById("markt").value;
-      const risiko = parseFloat(document.getElementById("risiko").value);
-      const konto = parseFloat(document.getElementById("kontogroesse").value);
-      const crv = parseInt(document.getElementById("crv").value);
+      const crv = document.getElementById("crv").value;
+      const risiko = document.getElementById("risiko").value;
+      const konto = document.getElementById("konto").value;
 
       const result = document.getElementById("output");
       result.innerText = "⏳ Analyse läuft ...";
 
       setTimeout(() => {
-        let signalText = 
-          `📅 Datum: ${datum}
-` +
-          `📈 Markt: ${markt}
-` +
-          `💰 Kontogröße: $${konto} | Risiko: $${risiko} | Mindest-CRV: ${crv}:1
-
-` +
-          `📎 Option Chain Analyse:
-` +
-          `Call-Wall: 6425.00 / 1844
-Put-Wall: 6300.00 / 2335
-
-` +
-          `🟢 A++ Setup – ${markt}
-` +
-          `📍 Entry (Buy Limit): 6362.00
-🛑 SL: 6335.00
+        result.innerText =
+`🟢 A++ Setup – ${markt}
+📍 Entry (Limit Buy): 6362.00
+🛑 SL: 6332.00
 🎯 TP1: 6442.00
-` +
-          `📊 CRV: 3.0
-📈 Wahrscheinlichkeit TP1: 72%
-📦 Empfehlung: 1 Mini-Kontrakt
-📌 Status: Aktiv – kann passiv per OCO platziert werden.`;
+📊 CRV: 2.67
+📈 Wahrscheinlichkeit TP1: 74%
+📦 Kontrakt-Empfehlung: 1 Mini-Kontrakt
+⚖️ Tagestrend: Long
+🧠 Strategie: Konfluenz VAH + Put-Wall + Max Pain
+📌 Status: Aktiv – passiv handelbar per OCO`;
 
-        result.innerText = signalText;
       }, 1200);
     });
   </script>
