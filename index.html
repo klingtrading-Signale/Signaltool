@@ -1,63 +1,84 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <title>A++ Signal Generator (Echte Logik)</title>
-  <style>
-    body { font-family: Arial, sans-serif; padding: 2rem; background: #f4f4f4; }
-    h1 { color: #0a0; }
-    .container { background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 0 8px rgba(0,0,0,0.1); }
-    label { font-weight: bold; display: block; margin-top: 1rem; }
-    input, select { padding: 0.4rem; margin-top: 0.2rem; width: 300px; }
-    button { margin-top: 1.5rem; padding: 0.6rem 1.2rem; background: #0a0; color: white; border: none; border-radius: 4px; cursor: pointer; }
-    .result { margin-top: 2rem; background: #eef; padding: 1rem; white-space: pre-wrap; border-radius: 6px; font-family: monospace; }
-  </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>A++ Signaltool – Modul 3 (Option Chain & A++ Logik)</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- PDF.js CDN (clientside) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.10.184/pdf.min.js"></script>
 </head>
 <body>
-  <h1>🧠 A++ Signal Generator (mit echter Analyse-Logik)</h1>
+  <div class="wrap">
+    <header>
+      <div class="logo">A++ Signaltool — Modul 3 (Prototype)</div>
+      <div class="note">Vollständige Option-Chain parsing & A++ Logik (Testfall: 08.08.2025 vorbefüllt)</div>
+    </header>
 
-  <div class="container">
-    <form id="form">
-      <label>📅 Datum: <input type="text" id="datum" placeholder="01.08.2025" /></label>
-      <label>📈 Markt:
-        <select id="markt">
-          <option>ES</option><option>MES</option><option>NQ</option><option>MNQ</option>
-        </select>
-      </label>
-      <label>📍 Aktueller Preis: <input type="number" id="preis" step="0.01" /></label>
-      <label>🎯 Risiko ($): <input type="number" id="risiko" value="100" /></label>
-      <label>💰 Kontogröße ($): <input type="number" id="konto" value="2000" /></label>
-      <label>⚖️ Mindest-CRV:
-        <select id="crv"><option>1</option><option>2</option><option selected>3</option><option>5</option></select>
-      </label>
-      <label>📎 Option Chain (PDF): <input type="file" id="pdfUpload" accept=".pdf" /></label>
-      <button type="submit">🚀 Analyse starten</button>
-    </form>
+    <main>
+      <section class="form">
+        <h2>Marktdaten (eingeben / anpassen)</h2>
+        <form id="signalForm">
+          <div class="grid">
+            <label>Datum<input id="date" type="date" value="2025-08-08" required></label>
+            <label>Markt
+              <select id="market">
+                <option>ES</option><option>MES</option><option>NQ</option><option>MNQ</option>
+              </select>
+            </label>
+            <label>Aktueller Preis<input id="price" type="number" step="0.25" value="6377.75" required></label>
+            <label>Vortag VAH<input id="vah" type="number" step="0.25" value="6390.25"></label>
+            <label>Vortag POC<input id="poc" type="number" step="0.25" value="6348.75"></label>
+            <label>Vortag VAL<input id="val" type="number" step="0.25" value="6342.50"></label>
+            <label>Vortageshoch<input id="vhigh" type="number" step="0.25" value="6426.75"></label>
+            <label>Vortagestief<input id="vlow" type="number" step="0.25" value="6334.25"></label>
+            <label>Max Pain<input id="maxPain" type="number" step="0.25" value="6325"></label>
+            <label>GEX
+              <select id="gex">
+                <option>positiv</option><option>neutral</option><option>negativ</option>
+              </select>
+            </label>
+            <label>Gamma Flip<input id="gammaFlip" type="number" step="0.25" value="626"></label>
+            <label>ATR Daily<input id="atr" type="number" step="0.01" value="66.79"></label>
+            <label>VIX<input id="vix" type="number" step="0.01" value="16.58"></label>
 
-    <div id="output" class="result">Bitte Daten eingeben und PDF hochladen ...</div>
+            <label>Kontogröße ($)<input id="balance" type="number" value="2000"></label>
+            <label>Risiko pro Trade ($)<input id="risk" type="number" value="500"></label>
+            <label>Gewünschtes Mindest-CRV
+              <select id="crvTarget">
+                <option value="1">1:1</option>
+                <option value="2">2:1</option>
+                <option value="3" selected>3:1</option>
+                <option value="5">5:1</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="upload-row">
+            <label class="filelabel">Option Chain PDF (Barchart-Format): <input id="optionPdf" type="file" accept="application/pdf"></label>
+            <button id="parsePdfBtn" type="button">📄 PDF einlesen</button>
+          </div>
+
+          <div class="buttons">
+            <button type="submit">📊 Signal generieren</button>
+            <button id="resetBtn" type="button">Zurücksetzen</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="output" id="outputArea">
+        <h2>Signal Ausgabe</h2>
+        <div id="signalBox" class="signalBox">Kein Signal generiert.</div>
+        <pre id="debug" class="debug"></pre>
+      </section>
+    </main>
+
+    <footer>
+      <small>Prototype — A++ Strategy. Lokal testen oder auf Vercel deployen.</small>
+    </footer>
   </div>
 
-  <script>
-    document.getElementById("form").addEventListener("submit", function(e) {
-      e.preventDefault();
-      const out = document.getElementById("output");
-      out.textContent = "⏳ Vollständige Analyse läuft (mit echter Strategie-Logik) ...";
-
-      setTimeout(() => {
-        out.textContent =
-`🟢 A++ Setup – ES
-📍 Entry (Limit Buy): 6362.00
-🛑 Stop-Loss: 6334.00
-🎯 TP1: 6442.00
-📊 CRV: 2.78
-📈 TP-Wahrscheinlichkeit: 76%
-📦 Kontrakt-Empfehlung: 1 Mini
-⚖️ Trendrichtung: Long
-🧠 Setup-Grundlage: Konfluenz POC + Put-Wall + Max Pain + Preisdruck + Tagestrend
-📌 Status: Aktiv – passiv per OCO handelbar`;
-      }, 1200);
-    });
-  </script>
+  <script src="pdf-parser.js"></script>
+  <script src="logic.js"></script>
 </body>
 </html>
