@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="de">
+<head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>A++ Signaltool UI</title>
+<link rel="stylesheet" href="../public/style.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.10.184/pdf.min.js"></script>
+<script>pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.10.184/pdf.worker.min.js";</script>
+</head>
+<body>
+  <div class="wrap">
+    <header><div class="logo">A++ Signaltool — Modul 3 (Prototype)</div></header>
+    <main>
+      <section class="form">
+        <form id="signalForm">
+          <div class="row">
+            <label>Markt
+              <select id="market">
+                <option value="ES">ES</option><option value="MES">MES</option>
+                <option value="NQ">NQ</option><option value="MNQ">MNQ</option>
+                <option value="BTC">BTC</option><option value="DOGE">Dogecoin</option>
+                <option value="SOL">Solana</option><option value="SHIB">Shiba Inu</option>
+                <option value="XRP">XRP</option>
+              </select>
+            </label>
+            <label>Datum<input id="date" type="date" value=""></label>
+            <label>Aktueller Preis<input id="price" type="number" step="0.01"></label>
+          </div>
+          <div id="futuresFields" class="fieldset">
+            <div class="grid">
+              <label>Vortag VAH<input id="vah" type="number" step="0.25"></label>
+              <label>Vortag POC<input id="poc" type="number" step="0.25"></label>
+              <label>Vortag VAL<input id="val" type="number" step="0.25"></label>
+              <label>Vortageshoch<input id="vhigh" type="number" step="0.25"></label>
+              <label>Vortagestief<input id="vlow" type="number" step="0.25"></label>
+              <label>Max Pain<input id="maxPain" type="number" step="0.25"></label>
+              <label>GEX<select id="gex"><option>positiv</option><option>neutral</option><option>negativ</option></select></label>
+              <label>Gamma Flip<input id="gammaFlip" type="number" step="0.25"></label>
+              <label>ATR Daily<input id="atr" type="number" step="0.01"></label>
+              <label>VIX<input id="vix" type="number" step="0.01"></label>
+            </div>
+            <div class="upload-row">
+              <label>Option Chain PDF: <input id="optionPdf" type="file" accept="application/pdf"></label>
+              <button id="parsePdfBtn" type="button">📄 PDF einlesen</button>
+            </div>
+          </div>
+          <div id="cryptoFields" class="fieldset" style="display:none">
+            <div class="grid">
+              <label>Eröffnung Tageskerze<input id="openC" type="number" step="0.01"></label>
+              <label>Vortageshoch<input id="vhighC" type="number" step="0.01"></label>
+              <label>Vortagestief<input id="vlowC" type="number" step="0.01"></label>
+              <label>VAH<input id="vahC" type="number" step="0.01"></label>
+              <label>POC<input id="pocC" type="number" step="0.01"></label>
+              <label>VAL<input id="valC" type="number" step="0.01"></label>
+              <label>ATR Daily<input id="atrC" type="number" step="0.01"></label>
+              <label>Funding Rate<input id="funding" type="text"></label>
+              <label>OI (%)<input id="oiC" type="text"></label>
+            </div>
+          </div>
+          <div class="riskRow">
+            <label>Kontogröße ($)<input id="balance" type="number" value="2000"></label>
+            <label>Risiko pro Trade ($)<input id="risk" type="number" value="500"></label>
+            <label>Gewünschtes Mindest-CRV
+              <select id="crvTarget"><option value="1">1:1</option><option value="2">2:1</option><option value="3" selected>3:1</option><option value="5">5:1</option></select>
+            </label>
+          </div>
+          <div class="buttons">
+            <button id="genSignal" type="submit">📊 Signal generieren</button>
+            <button id="saveBtn" type="button">📥 Speichern (Journal)</button>
+            <button id="resetBtn" type="button">Zurücksetzen</button>
+          </div>
+        </form>
+      </section>
+      <section class="output">
+        <div id="signalBox" class="signalBox no">Kein Signal generiert.</div>
+        <pre id="debug" class="debug"></pre>
+        <div id="journal"></div>
+      </section>
+    </main>
+  </div>
+  <script type="module" src="./app-ui.js"></script>
+</body>
+</html>

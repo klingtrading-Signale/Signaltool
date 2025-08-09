@@ -1,0 +1,9 @@
+{
+  "name": "a-plus-signal-generator",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "serve src -s -l 3000"
+  },
+  "dependencies": {}
+}
